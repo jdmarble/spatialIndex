@@ -1,0 +1,31 @@
+name: spatialIndex
+version: 0.0.0.0
+description: Spatial Index
+
+license: BSD3
+license-file: LICENSE
+copyright: J.D. Marble
+maintainer: jmarble@cse.unr.edu
+
+cabal-version: >= 1.8
+build-type: Simple
+
+
+Library
+        hs-source-dirs: src
+        exposed-modules: Data.MetricSpace
+                       , Data.SpatialIndex
+        build-depends: base ==4.*
+                     , list-extras ==0.4.*
+                     , random ==1.0.*
+        ghc-options: -Wall
+
+Executable test
+        hs-source-dirs: test
+        main-is: TestMain.hs
+        build-depends: base ==4.*
+                     , test-framework ==0.3.*
+                     , test-framework-th ==0.1.*                   
+                     , test-framework-quickcheck2 ==0.2.*
+                     , QuickCheck ==2.1.*
+                     , spatialIndex ==0.0.*
