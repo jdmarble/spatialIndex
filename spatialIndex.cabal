@@ -1,5 +1,5 @@
 name: spatialIndex
-version: 0.0.0.0
+version: 0.0.0.1
 description: Spatial Index
 
 license: BSD3
@@ -27,5 +27,5 @@ Executable test
                      , test-framework ==0.3.*
                      , test-framework-th ==0.1.*                   
                      , test-framework-quickcheck2 ==0.2.*
-                     , QuickCheck ==2.1.*
+                     , QuickCheck ==2.3.*
                      , spatialIndex ==0.0.*
