@@ -15,18 +15,19 @@ tests = testGroup "SpacialIndex tests"
  , isSpatialIndex (undefined :: [Double]) "[Double]"
  ]
 
-isSpatialIndex :: ( SpatialIndex i, a ~ Element i
+isSpatialIndex :: ( SpatialIndex i, a ~ Element i, a ~ Query i
                   , Arbitrary i, Show i
                   , Eq a, Arbitrary a, Show a)
                  => i -> String -> Test
-isSpatialIndex _type groupName = 
+isSpatialIndex _type groupName =
     testGroup (groupName ++ " is a valid spatial index")
         [ makeTest "recall" prop_recall
         ]
   where
     makeTest name f = testProperty name $ f _type
 
-prop_recall :: (SpatialIndex i, a ~ Element i, Eq a) => i -> i -> a -> Bool
+prop_recall :: (SpatialIndex i, a ~ Element i, a ~ Query i, Eq a)
+            => i -> i -> a -> Bool
 prop_recall _ i a = nearest i' a == a
     where
       i' = insert a i
