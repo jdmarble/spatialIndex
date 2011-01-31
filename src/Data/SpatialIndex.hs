@@ -1,28 +1,22 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Data.SpatialIndex (SpatialIndex (..)) where
 
+import Data.Foldable (Foldable, toList)
 import Data.List.Extras.Argmax (argmin)
 
 import Data.MetricSpace
 
 
-class SpatialIndex i where
-    type Element i
-    type Query i
-    insert :: Element i -> i -> i
-    nearest :: i -> Query i -> Element i
+class SpatialIndex i e q where
+    nearest :: i -> q -> e
 
-instance MetricSpace a => SpatialIndex [a] where
-    type Element [a] = a
-    type Query [a] = a
-    insert = (:)
-    nearest as q = argmin (distance q) as
+instance (Foldable t, MetricSpace e) => SpatialIndex (t e) e e where
+    nearest te q = argmin (distance q) $ toList te
 
-instance Ord c => SpatialIndex (b -> a -> c, [a]) where
-    type Element (b -> a -> c, [a]) = a
-    type Query (b -> a -> c, [a]) = b
-    insert a (dist, as) = (dist, a:as)
-    nearest (_, []) _ = error "nearest: empty SpatialIndex"
-    nearest (dist, as) q = argmin (dist q) as
+instance (Foldable t, Ord o) => SpatialIndex (q -> e -> o, t e) e q where
+    nearest (dist, te) q = argmin (dist q) $ toList te
+
+instance (Foldable t, Ord o) => SpatialIndex (t (q -> o, e)) e q where
+    nearest te q = snd . argmin (($ q) . fst) $ toList te
